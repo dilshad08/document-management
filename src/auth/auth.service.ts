@@ -29,7 +29,7 @@ export class AuthService {
 
   async login(loginData: LoginDto) {
     try {
-      const validatedUser: any = this.validateUser(
+      const validatedUser: any = await this.validateUser(
         loginData.email,
         loginData.password,
       );

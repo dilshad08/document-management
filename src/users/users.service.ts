@@ -10,7 +10,7 @@ export class UsersService {
 
   async createUser({ email, name, password, role }: CreateUserDto) {
     try {
-      const user = await this.prisma.user.findFirst({
+      const user = await this.prisma.user.findUnique({
         where: {
           email: email,
         },
@@ -26,13 +26,43 @@ export class UsersService {
           password: hashedPassword,
           role,
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
       });
     } catch (error) {
       throw error;
     }
   }
 
-  async findOneByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+  async updateUserRole(userId: string, role: string) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+      if (!user) {
+        throw new BadRequestException('User does not exist');
+      }
+      user.role = role;
+      return this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: { role },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 }
