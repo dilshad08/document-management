@@ -28,6 +28,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { BaseCreatedResponseDto } from 'src/common/response-dto/BaseResponseDto';
+import { diskStorage } from 'multer';
+import * as path from 'path';
+import * as fs from 'fs';
+import { getDestination, getFilename } from 'src/common/helper';
 
 @ApiTags('Documents') // Group in Swagger
 @ApiBearerAuth()
@@ -42,10 +46,6 @@ export class DocumentsController {
     status: 403,
     description: 'Forbidden: Only admins and editors allowed',
   })
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'editor')
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data') // Required for file uploads
   @ApiBody({
     description: 'Upload document with metadata',
@@ -70,7 +70,17 @@ export class DocumentsController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file'))
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'editor')
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: getDestination,
+        filename: getFilename,
+      }),
+    }),
+  )
   async uploadFile(
     @Body() createDocumentDto: CreateDocumentDto,
     @UploadedFile() file: Express.Multer.File,

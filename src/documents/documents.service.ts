@@ -22,15 +22,13 @@ export class DocumentsService {
         'uploads',
         file.filename,
       );
-      const fileExtension = path.extname(file.originalname);
-      const fileNameWithExtension = `${file.filename}${fileExtension}`;
       if (fs.existsSync(filePath)) {
-        console.log('File uploaded:', fileNameWithExtension);
+        console.log('File uploaded:', file.filename);
         const newDocument = this.prisma.document.create({
           data: {
             title: createDocumentDto.title,
             description: createDocumentDto.description,
-            filePath: fileNameWithExtension,
+            filePath: file.filename,
             userId: req.user.id,
           },
         });
