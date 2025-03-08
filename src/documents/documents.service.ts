@@ -2,12 +2,14 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import * as fs from 'fs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CustomRequest } from 'src/common/interfaces/custom-request';
+import * as path from 'path';
 
 @Injectable()
 export class DocumentsService {
@@ -76,5 +78,30 @@ export class DocumentsService {
     } catch (error) {
       throw error;
     }
+  }
+  async deleteDocument(id: string) {
+    const document = await this.prisma.document.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!document) {
+      throw new NotFoundException('Document not found');
+    }
+    const filePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      'uploads',
+      document.filePath,
+    );
+    // Check if the file exists
+    if (!fs.existsSync(filePath)) {
+      throw new NotFoundException('File not found');
+    }
+    fs.unlinkSync(filePath);
+    return {
+      message: 'Document deleted successfully',
+    };
   }
 }

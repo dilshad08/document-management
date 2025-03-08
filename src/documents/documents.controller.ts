@@ -10,6 +10,8 @@ import {
   UseInterceptors,
   Req,
   Put,
+  Res,
+  NotFoundException,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { UpdateDocumentDto } from './dto/update-document.dto';
@@ -34,6 +36,9 @@ import {
 } from 'src/common/response-dto/BaseResponseDto';
 import { diskStorage } from 'multer';
 import { getDestination, getFilename } from 'src/common/helper';
+import * as path from 'path';
+import * as fs from 'fs';
+import { Response } from 'express';
 
 @ApiTags('Documents')
 @ApiBearerAuth()
@@ -141,5 +146,74 @@ export class DocumentsController {
     @Param('id') id: string,
   ) {
     return this.documentsService.updateFile(updateDocumentDto, file, req, id);
+  }
+
+  @ApiOperation({ summary: 'Download a file' })
+  @ApiParam({
+    name: 'filename',
+    type: String,
+    description: 'The name of the file to download',
+  })
+  @ApiResponse({
+    status: 200,
+    type: BaseResponseDto,
+    description: 'File downloaded successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'File not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @Roles('admin', 'editor', 'viewer')
+  @Get('download/:filename')
+  async downloadFile(
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const filePath = path.join(__dirname, '..', '..', 'uploads', filename);
+      if (!fs.existsSync(filePath)) {
+        throw new NotFoundException('Document not found');
+      }
+
+      // Set the appropriate headers for downloading
+      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+      res.setHeader('Content-Type', 'application/octet-stream');
+
+      // Stream the file to the client
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.pipe(res);
+    } catch (error) {
+      console.log('Error downloading file.');
+      res.status(500).send('Internal server error');
+    }
+  }
+
+  @ApiOperation({ summary: 'Delete a file by its ID' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'The ID of the file to delete',
+  })
+  @ApiResponse({
+    status: 200,
+    type: BaseResponseDto,
+    description: 'File deleted successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'File not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @Roles('admin', 'editor')
+  @Delete('delete/:id')
+  async deleteFile(@Param('id') id: string) {
+    return await this.documentsService.deleteDocument(id);
   }
 }
