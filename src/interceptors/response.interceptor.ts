@@ -17,13 +17,10 @@ export class ResponseInterceptor implements NestInterceptor {
         const response = context.switchToHttp().getResponse();
         const statusCode = response.statusCode || 200;
         const responseData = data?.data || data || null;
-        let successResponse: any = {
+        const successResponse: any = {
           statusCode,
           data: responseData,
         };
-        if (data?.message) {
-          successResponse = { ...successResponse, message: data?.message };
-        }
         return successResponse;
       }),
     );
