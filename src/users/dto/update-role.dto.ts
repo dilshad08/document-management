@@ -1,4 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum Role {
   VIEWER = 'viewer',
@@ -7,6 +8,7 @@ export enum Role {
 }
 
 export class UpdateRoleDto {
+  @ApiProperty({ example: '' })
   @IsEnum(Role)
   @IsString()
   @IsNotEmpty()

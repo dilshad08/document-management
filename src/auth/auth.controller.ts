@@ -9,14 +9,18 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { LoginResponseDto } from './dto/response/LoginVO';
+import { BaseResponseDto } from 'src/common/response-dto/BaseResponseDto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({ status: 201, type: LoginResponseDto })
+  @ApiOperation({ summary: 'Login user' })
+  @ApiResponse({
+    status: 200,
+    type: BaseResponseDto,
+  })
   @ApiBody({ type: LoginDto })
   @HttpCode(HttpStatus.OK)
   @Post('login')

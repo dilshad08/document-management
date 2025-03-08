@@ -13,6 +13,7 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
+import { BaseResponseDto } from 'src/common/response-dto/BaseResponseDto';
 
 @ApiTags('Users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -20,19 +21,20 @@ import {
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiResponse({ status: 201, type: BaseResponseDto })
+  @ApiBody({ type: CreateUserDto })
   @Roles('admin')
   @Post('register')
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({ status: 201, description: 'User created successfully' })
-  @ApiBody({ type: CreateUserDto })
   async register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
+
+  @ApiOperation({ summary: 'Update user role by id' })
+  @ApiResponse({ status: 200, type: BaseResponseDto })
+  @ApiParam({ name: 'id', required: true, description: 'User ID' })
   @Roles('admin')
   @Put('role/:id')
-  @ApiOperation({ summary: 'Update user role by id' })
-  @ApiResponse({ status: 200, description: 'User details retrieved' })
-  @ApiParam({ name: 'id', required: true, description: 'User ID' })
   async updateUserRole(
     @Param('id') userId: string,
     @Body() role: UpdateRoleDto,

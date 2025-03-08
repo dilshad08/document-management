@@ -1,5 +1,9 @@
 // src/auth/auth.service.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -33,6 +37,9 @@ export class AuthService {
         loginData.email,
         loginData.password,
       );
+      if (!validatedUser) {
+        throw new BadRequestException('Invalid credentials');
+      }
       const payload = {
         email: loginData.email,
         sub: validatedUser.id,
