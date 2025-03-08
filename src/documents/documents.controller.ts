@@ -27,10 +27,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  BaseCreatedResponseDto,
-  BaseResponseDto,
-} from 'src/common/response-dto/BaseResponseDto';
+import { BaseCreatedResponseDto } from 'src/common/response-dto/BaseResponseDto';
 
 @ApiTags('Documents') // Group in Swagger
 @ApiBearerAuth()

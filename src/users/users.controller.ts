@@ -12,6 +12,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import {
   BaseCreatedResponseDto,
@@ -19,6 +20,7 @@ import {
 } from 'src/common/response-dto/BaseResponseDto';
 
 @ApiTags('Users')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
