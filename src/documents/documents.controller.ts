@@ -173,23 +173,18 @@ export class DocumentsController {
     @Param('filename') filename: string,
     @Res() res: Response,
   ) {
-    try {
-      const filePath = path.join(__dirname, '..', '..', 'uploads', filename);
-      if (!fs.existsSync(filePath)) {
-        throw new NotFoundException('Document not found');
-      }
+    const filePath = path.join(__dirname, '..', '..', 'uploads', filename);
 
-      // Set the appropriate headers for downloading
-      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-      res.setHeader('Content-Type', 'application/octet-stream');
-
-      // Stream the file to the client
-      const fileStream = fs.createReadStream(filePath);
-      fileStream.pipe(res);
-    } catch (error) {
-      console.log('Error downloading file.');
-      res.status(500).send('Internal server error');
+    // Check if the file exists
+    if (!fs.existsSync(filePath)) {
+      throw new NotFoundException('Document not found');
     }
+
+    // Set headers and stream the file
+    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+    res.setHeader('Content-Type', 'application/octet-stream');
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.pipe(res);
   }
 
   @ApiOperation({ summary: 'Delete a file by its ID' })
