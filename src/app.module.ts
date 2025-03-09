@@ -6,6 +6,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { DocumentsModule } from './documents/documents.module';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { DocumentsModule } from './documents/documents.module';
     AuthModule,
     UsersModule,
     DocumentsModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

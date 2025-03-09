@@ -10,10 +10,15 @@ import * as fs from 'fs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CustomRequest } from 'src/common/interfaces/custom-request';
 import * as path from 'path';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class DocumentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectQueue('document-queue') private documentQueue: Queue,
+  ) {}
   async handleFile(
     createDocumentDto: CreateDocumentDto,
     file: Express.Multer.File,
@@ -23,7 +28,7 @@ export class DocumentsService {
       const filePath = file.destination + '/' + file.filename;
       if (fs.existsSync(filePath)) {
         console.log('File uploaded:', file.filename);
-        const newDocument = this.prisma.document.create({
+        const newDocument = await this.prisma.document.create({
           data: {
             title: createDocumentDto.title,
             description: createDocumentDto.description,
@@ -31,6 +36,18 @@ export class DocumentsService {
             userId: req.user.id,
           },
         });
+        await this.documentQueue.add(
+          'document-processing',
+          {
+            documentId: newDocument.id,
+            filePath: newDocument.filePath,
+          },
+          {
+            attempts: 3,
+            backoff: { type: 'fixed', delay: 5000 },
+            removeOnFail: true,
+          },
+        );
         return newDocument;
       }
       throw new InternalServerErrorException('Error in uploading document');
@@ -61,7 +78,7 @@ export class DocumentsService {
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
         console.log('File updated:', file.filename);
-        const updatedDocument = this.prisma.document.update({
+        const updatedDocument = await this.prisma.document.update({
           where: {
             id: id,
           },
@@ -72,6 +89,20 @@ export class DocumentsService {
             userId: req.user.id,
           },
         });
+
+        await this.documentQueue.add(
+          'document-processing',
+          {
+            documentId: updatedDocument.id,
+            filePath: updatedDocument.filePath,
+          },
+          {
+            attempts: 3,
+            backoff: { type: 'fixed', delay: 5000 },
+            removeOnFail: true,
+          },
+        );
+
         return updatedDocument;
       }
       throw new InternalServerErrorException('Error in updating document');
@@ -103,5 +134,18 @@ export class DocumentsService {
     return {
       message: 'Document deleted successfully',
     };
+  }
+
+  async getDocuments(userId: string) {
+    return this.prisma.document.findMany({ where: { userId } });
+  }
+
+  async getIngestionStatus(documentId: string) {
+    const document = await this.prisma.document.findUnique({
+      where: { id: documentId },
+    });
+    if (!document) {
+      throw new NotFoundException('Document not found');
+    }
   }
 }

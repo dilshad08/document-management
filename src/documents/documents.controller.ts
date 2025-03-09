@@ -216,4 +216,16 @@ export class DocumentsController {
   async deleteFile(@Param('id') id: string) {
     return await this.documentsService.deleteDocument(id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getDocuments(@Req() req: CustomRequest) {
+    return this.documentsService.getDocuments(req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('ingestion-status/:id')
+  async getIngestionStatus(@Param('id') documentId: string) {
+    return this.documentsService.getIngestionStatus(documentId);
+  }
 }

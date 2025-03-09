@@ -4,10 +4,12 @@ import { DocumentsController } from './documents.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { QueueModule } from 'src/queue/queue.module';
 
 @Module({
   imports: [
     AuthModule,
+    QueueModule,
     MulterModule.register({
       dest: './uploads',
       limits: { fileSize: 5 * 1024 * 1024 },

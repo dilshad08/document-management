@@ -21,7 +21,7 @@ model Document {
   title           String
   description     String
   filePath        String
-  ingestionStatus String @default("pending") // Status: pending, processing, pompleted, failed
+  ingestionStatus String @default("pending") // Status: pending, processing, completed, failed
   userId          String
   user            User   @relation(fields: [userId], references: [id])
 }
