@@ -179,13 +179,45 @@ describe('DocumentsController', () => {
   });
 
   describe('getIngestionStatus', () => {
-    it('should return the ingestion status of a document', async () => {
-      const result = { id: '1', status: 'completed' };
+    it('should return the ingestion status of a document for the authenticated user', async () => {
+      const documentId = '1';
+      const userId = 'user-123';
+      const mockRequest = {
+        user: { id: userId },
+      } as CustomRequest;
+
+      const result = { id: documentId, status: 'completed', userId };
       mockDocumentsService.getIngestionStatus.mockResolvedValue(result);
 
-      const response = await controller.getIngestionStatus('1');
+      const response = await controller.getIngestionStatus(
+        documentId,
+        mockRequest,
+      );
       expect(response).toEqual(result);
-      expect(documentsService.getIngestionStatus).toHaveBeenCalledWith('1');
+      expect(documentsService.getIngestionStatus).toHaveBeenCalledWith(
+        documentId,
+        userId,
+      );
+    });
+
+    it('should throw an error if the document ingestion status cannot be retrieved', async () => {
+      const documentId = '1';
+      const userId = 'user-123';
+      const mockRequest = {
+        user: { id: userId },
+      } as CustomRequest;
+
+      mockDocumentsService.getIngestionStatus.mockRejectedValue(
+        new Error('Failed to retrieve ingestion status'),
+      );
+
+      await expect(
+        controller.getIngestionStatus(documentId, mockRequest),
+      ).rejects.toThrow('Failed to retrieve ingestion status');
+      expect(documentsService.getIngestionStatus).toHaveBeenCalledWith(
+        documentId,
+        userId,
+      );
     });
   });
 });

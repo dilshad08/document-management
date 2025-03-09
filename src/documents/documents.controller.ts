@@ -212,6 +212,25 @@ export class DocumentsController {
     return await this.documentsService.deleteDocument(id);
   }
 
+  @ApiOperation({ summary: 'Delete a file by its ID' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'The ID of the file to delete',
+  })
+  @ApiResponse({
+    status: 200,
+    type: BaseResponseDto,
+    description: 'File deleted successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'File not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
   @UseGuards(JwtAuthGuard)
   @Get()
   async getDocuments(@Req() req: CustomRequest) {
@@ -220,7 +239,10 @@ export class DocumentsController {
 
   @UseGuards(JwtAuthGuard)
   @Get('ingestion-status/:id')
-  async getIngestionStatus(@Param('id') documentId: string) {
-    return this.documentsService.getIngestionStatus(documentId);
+  async getIngestionStatus(
+    @Param('id') documentId: string,
+    @Req() req: CustomRequest,
+  ) {
+    return this.documentsService.getIngestionStatus(documentId, req.user.id);
   }
 }

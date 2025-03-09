@@ -140,9 +140,9 @@ export class DocumentsService {
     return this.prisma.document.findMany({ where: { userId } });
   }
 
-  async getIngestionStatus(documentId: string) {
+  async getIngestionStatus(documentId: string, userId: string) {
     const document = await this.prisma.document.findUnique({
-      where: { id: documentId },
+      where: { id: documentId, userId: userId },
     });
     if (!document) {
       throw new NotFoundException('Document not found');

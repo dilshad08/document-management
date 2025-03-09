@@ -1,98 +1,228 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+Document Management System
+Overview
+The Document Management System is a robust RESTful API built with NestJS and Prisma that enables users to manage documents with role-based access control. The system supports the following features:
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Authentication: Register, login, and handle user roles (Admin, Editor, Viewer).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+User Management: Admin-only functionality for managing user roles and permissions.
 
-## Description
+Document Management: CRUD operations for documents, including role-based access control.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Ingestion Workflow: Asynchronous document ingestion using BullMQ to simulate interaction with a Python backend.
 
-## Project setup
+This project is designed to be modular, scalable, and easy to extend. It uses PostgreSQL as the database, JWT for authentication, and BullMQ for background job processing.
 
-```bash
-$ npm install
-```
+Features
 
-## Compile and run the project
+1. Authentication
+   Register: Create a new user with a role (Admin, Editor, Viewer).
 
-```bash
-# development
-$ npm run start
+Login: Authenticate users and generate a JWT token.
 
-# watch mode
-$ npm run start:dev
+Role-Based Access Control: Restrict access to routes based on user roles.
 
-# production mode
-$ npm run start:prod
-```
+2. User Management
+   Admin-Only Routes:
 
-## Run tests
+Update user roles.
 
-```bash
-# unit tests
-$ npm run test
+3. Document Management
+   Create Document: Upload a new document (Admin/Editor only).
 
-# e2e tests
-$ npm run test:e2e
+Update Document: Modify document details (Admin/Editor only).
 
-# test coverage
-$ npm run test:cov
-```
+Delete Document: Remove a document (Admin/Editor only).
 
-## Deployment
+View Documents: Retrieve documents (Viewer, Editor, Admin).
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+4. Ingestion Workflow
+   Asynchronous Ingestion: Simulate document ingestion using BullMQ for background processing.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Status Tracking: Track ingestion status (Pending, Processing, Completed, Failed).
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+Mock Python Backend: Simulate interaction with a Python backend for testing.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Technologies Used
+Backend: NestJS (TypeScript)
 
-## Resources
+Database: PostgreSQL
 
-Check out a few resources that may come in handy when working with NestJS:
+ORM: Prisma
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Authentication: JWT (JSON Web Tokens)
 
-## Support
+Background Jobs: BullMQ (for asynchronous ingestion)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+API Documentation: Swagger/OpenAPI
 
-## Stay in touch
+Containerization: Docker
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Installation
+Prerequisites
+Before you begin, ensure you have the following installed:
 
-## License
+Node.js (v16 or higher)
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+npm or yarn
+
+Docker (optional, for running PostgreSQL and Redis in a container)
+
+PostgreSQL (if not using Docker)
+
+Redis (required for BullMQ)
+
+Step 1: Clone the Repository
+bash
+Copy
+git clone https://github.com/your-username/document-management.git
+cd document-management
+Step 2: Set Up Environment Variables
+Create a .env file in the root directory:
+
+bash
+Copy
+touch .env
+Add the following environment variables to the .env file:
+
+env
+Copy
+NODE_ENV='development'
+PORT=8080
+
+# PostgreSQL
+
+POSTGRES_USER=your-postgres-user
+POSTGRES_PASSWORD=your-postgres-password
+POSTGRES_DB=document_db
+DATABASE_URL="postgresql://your-postgres-user:your-postgres-password@localhost:5432/document_db"
+
+# JWT
+
+JWT_SECRET="your-secret-key"
+
+# Redis (for BullMQ)
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+Replace the placeholders with your preferred values.
+
+Step 3: Set Up PostgreSQL and Redis
+Option 1: Using Docker (Recommended)
+Start the PostgreSQL and Redis containers:
+
+bash
+Copy
+docker-compose up -d
+Verify the containers are running:
+
+bash
+Copy
+docker ps
+Option 2: Manual Setup
+Install PostgreSQL and Redis on your machine.
+
+Create a database named document_db.
+
+Update the DATABASE_URL and REDIS_HOST in the .env file with your credentials.
+
+Step 4: Install Dependencies
+bash
+Copy
+npm install
+Step 5: Run Prisma Migrations
+Apply the database schema using Prisma:
+
+bash
+Copy
+npx prisma migrate dev --name init
+Step 6: Start the Application
+Run the NestJS application in development mode:
+
+bash
+Copy
+npm run start:dev
+The API will be available at http://localhost:8080/api.
+
+Step 7: Access Swagger Documentation
+Open your browser and navigate to:
+
+Copy
+http://localhost:8080/api/docs
+This will display the Swagger UI, where you can explore and test the API endpoints.
+
+Ingestion Workflow
+
+Ingestion Workflow with BullMQ
+The ingestion workflow is handled asynchronously using BullMQ. Here's how it works:
+
+Trigger Ingestion:
+
+When a document is uploaded, an ingestion job is added to the BullMQ queue.
+
+The job simulates processing with a delay and updates the ingestion status.
+
+Status Tracking:
+
+The ingestion status is stored in the database and can be queried using the /documents/ingestion-status/:id endpoint.
+
+Error Handling:
+
+If ingestion fails, the job is retried up to a specified number of times.
+
+Testing
+Unit Tests
+Run unit tests using the following command:
+
+bash
+Copy
+npm run test
+
+Build the Docker image:
+
+bash
+Copy
+docker-compose build
+Start the containers:
+
+bash
+Copy
+docker-compose up -d
+Access the API at http://localhost:8080/api.
+
+Project Structure
+Copy
+src/
+├── auth/ # Authentication module
+├── users/ # User management module
+├── documents/ # Document management module
+├── queue/ # BullMQ queue for ingestion
+├── prisma/ # Prisma schema and migrations
+├── interceptors/ # Response interceptors
+├── app.module.ts # Root module
+├── main.ts # Application entry point
+Contributing
+Contributions are welcome! Please follow these steps:
+
+Fork the repository.
+
+Create a new branch (git checkout -b feature/your-feature).
+
+Commit your changes (git commit -m 'Add some feature').
+
+Push to the branch (git push origin feature/your-feature).
+
+Open a pull request.
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Contact
+For questions or feedback, please reach out to:
+
+Dilshad Ahmad
+
+Email: idilshadk@gmail.com
+
+GitHub: dilshad08
+
+Thank you for using the Document Management System! 🚀
