@@ -1,10 +1,9 @@
-// src/users/users.controller.ts
 import { Controller, Post, Body, UseGuards, Put, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import {
   ApiTags,
@@ -17,7 +16,7 @@ import {
 import {
   BaseCreatedResponseDto,
   BaseResponseDto,
-} from 'src/common/response-dto/BaseResponseDto';
+} from '../common/response-dto/BaseResponseDto';
 
 @ApiTags('Users')
 @ApiBearerAuth()

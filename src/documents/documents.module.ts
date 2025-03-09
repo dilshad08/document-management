@@ -1,10 +1,10 @@
 import { BadRequestException, Module } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { DocumentsController } from './documents.controller';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { QueueModule } from 'src/queue/queue.module';
+import { PrismaService } from '../prisma/prisma.service';
+import { QueueModule } from '../queue/queue.module';
 
 @Module({
   imports: [

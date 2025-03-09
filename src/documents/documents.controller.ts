@@ -15,12 +15,12 @@ import {
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { UpdateDocumentDto } from './dto/update-document.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CustomRequest } from 'src/common/interfaces/custom-request';
+import { CustomRequest } from '../common/interfaces/custom-request';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -33,9 +33,9 @@ import {
 import {
   BaseCreatedResponseDto,
   BaseResponseDto,
-} from 'src/common/response-dto/BaseResponseDto';
+} from '../common/response-dto/BaseResponseDto';
 import { diskStorage } from 'multer';
-import { getDestination, getFilename } from 'src/common/helper';
+import { getDestination, getFilename } from '../common/helper';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Response } from 'express';

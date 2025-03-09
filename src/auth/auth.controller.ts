@@ -1,4 +1,3 @@
-// src/auth/auth.controller.ts
 import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -9,7 +8,7 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { BaseResponseDto } from 'src/common/response-dto/BaseResponseDto';
+import { BaseResponseDto } from '../common/response-dto/BaseResponseDto';
 
 @ApiTags('Auth')
 @Controller('auth')
