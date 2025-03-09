@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -47,7 +47,6 @@ export class UsersService {
       if (!user) {
         throw new BadRequestException('User does not exist');
       }
-      user.role = role;
       return this.prisma.user.update({
         where: {
           id: userId,

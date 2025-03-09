@@ -25,6 +25,9 @@ export class DocumentsService {
     req: CustomRequest,
   ) {
     try {
+      if (!file) {
+        throw new BadRequestException('File required');
+      }
       const filePath = file.destination + '/' + file.filename;
       if (fs.existsSync(filePath)) {
         console.log('File uploaded:', file.filename);
@@ -147,5 +150,6 @@ export class DocumentsService {
     if (!document) {
       throw new NotFoundException('Document not found');
     }
+    return { status: document.ingestionStatus };
   }
 }

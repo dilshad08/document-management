@@ -212,20 +212,10 @@ export class DocumentsController {
     return await this.documentsService.deleteDocument(id);
   }
 
-  @ApiOperation({ summary: 'Delete a file by its ID' })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'The ID of the file to delete',
-  })
+  @ApiOperation({ summary: 'Get all user documents' })
   @ApiResponse({
     status: 200,
     type: BaseResponseDto,
-    description: 'File deleted successfully',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'File not found',
   })
   @ApiResponse({
     status: 500,
@@ -237,6 +227,24 @@ export class DocumentsController {
     return this.documentsService.getDocuments(req.user.id);
   }
 
+  @ApiOperation({ summary: 'Get ingestion status' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'The ID of the document',
+  })
+  @ApiResponse({
+    status: 200,
+    type: BaseResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Document not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
   @UseGuards(JwtAuthGuard)
   @Get('ingestion-status/:id')
   async getIngestionStatus(
